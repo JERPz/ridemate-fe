@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAppStore } from '@/stores/useAppStore'
 import AppField from '@/components/AppField.vue'
+import AppButton from '@/components/AppButton.vue'
 import LogoMark from '@/components/icons/LogoMark.vue'
 import AccountCircleIcon from '@/components/icons/AccountCircleIcon.vue'
 import LockIcon from '@/components/icons/LockIcon.vue'
@@ -9,13 +11,15 @@ import EyeIcon from '@/components/icons/EyeIcon.vue'
 import EyeOffIcon from '@/components/icons/EyeOffIcon.vue'
 
 const router = useRouter()
+const { state, login, clearError } = useAppStore()
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const errors = ref({ email: '', password: '' })
 
-function onSubmit() {
+async function onSubmit() {
+  clearError()
   errors.value = {
     email: email.value.trim() ? '' : 'Enter your email address.',
     password: password.value ? '' : 'Enter your password.',
@@ -23,8 +27,8 @@ function onSubmit() {
 
   if (errors.value.email || errors.value.password) return
 
-  // No backend yet — continue to the home screen.
-  router.push({ name: 'home' })
+  const ok = await login({ email: email.value.trim(), password: password.value })
+  if (ok) router.push({ name: 'home' })
 }
 </script>
 
@@ -83,12 +87,16 @@ function onSubmit() {
           </template>
         </AppField>
 
-        <button
-          type="submit"
-          class="mt-2 h-13 w-full rounded-full bg-brand text-[15px] font-bold tracking-wide text-white transition-colors hover:bg-brand-dark active:bg-brand-dark"
+        <p
+          v-if="state.error"
+          class="rounded-card bg-red-50 px-4 py-3 text-[13px] font-semibold text-red-700"
         >
-          LOGIN
-        </button>
+          {{ state.error }}
+        </p>
+
+        <AppButton type="submit" class="mt-2" :disabled="state.loading">
+          {{ state.loading ? 'SIGNING IN…' : 'LOGIN' }}
+        </AppButton>
       </form>
 
       <p class="mt-auto pt-8 text-center text-[13px] font-semibold text-ink">
