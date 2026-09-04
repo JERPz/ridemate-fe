@@ -1,0 +1,49 @@
+@import 'tailwindcss';
+
+/*
+ * RIDEMATE design tokens.
+ *
+ * The palette is carried over unchanged from the original Figma design
+ * (orange / warm grey / white); the layout and typography are a redesign.
+ */
+@theme {
+  /* Brand orange, plus a darker step for pressed and hover states. */
+  --color-brand: #ff7f26;
+  --color-brand-dark: #e56a12;
+
+  /* Warm greys from the design. */
+  --color-panel: #e8e8e8;
+  --color-surface: #e6e1e1;
+
+  --color-ink: #24201d;
+  --color-muted: #8b8480;
+  --color-link: #1500ff;
+
+  --radius-sheet: 32px;
+  --radius-card: 20px;
+
+  --shadow-card: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  --shadow-soft: 0 2px 10px 0 rgba(36, 32, 29, 0.08);
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-brand);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Keyboard focus is always visible, never suppressed. */
+  :focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+}
